@@ -284,4 +284,13 @@ function App() {
   );
 }
 
-createRoot(document.getElementById('root')).render(<App />);
+import CustomerBooking from './CustomerBooking.jsx';
+
+const path = window.location.pathname;
+
+const component =
+  path.startsWith('/reservar')
+    ? <CustomerBooking />
+    : <App />;
+
+createRoot(document.getElementById('root')).render(component);
