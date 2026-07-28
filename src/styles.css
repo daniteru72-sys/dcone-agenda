@@ -72,3 +72,191 @@ thead .time-column { z-index: 7; }
   .save-panel { align-items: stretch; flex-direction: column; }
   .primary-button { width: 100%; }
 }
+.customer-page {
+  width: min(920px, calc(100% - 24px));
+  margin: 0 auto;
+  padding: 30px 0 60px;
+}
+
+.customer-hero {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.booking-card {
+  background: rgba(22, 22, 27, .94);
+  border: 1px solid #2d2d35;
+  border-radius: 22px;
+  padding: 22px;
+  margin-bottom: 16px;
+  box-shadow: 0 22px 60px rgba(0, 0, 0, .25);
+}
+
+.booking-step {
+  display: flex;
+  gap: 13px;
+  align-items: flex-start;
+  margin-bottom: 18px;
+}
+
+.booking-step h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.booking-step p {
+  margin: 4px 0 0;
+  color: #92929d;
+}
+
+.step-number {
+  width: 34px;
+  height: 34px;
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  background: #e1aa35;
+  color: #15120b;
+  font-weight: 900;
+}
+
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.service-option {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  border: 1px solid #34343d;
+  border-radius: 15px;
+  background: #222228;
+  color: #efeff2;
+  padding: 16px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.service-option span {
+  color: #9797a2;
+  font-size: 13px;
+}
+
+.service-option.active {
+  border-color: #e2ad3d;
+  background: rgba(226, 173, 61, .12);
+}
+
+.customer-days {
+  display: grid;
+  gap: 12px;
+}
+
+.customer-day {
+  border: 1px solid #303038;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.customer-day header {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 13px 15px;
+  background: #1c1c21;
+  text-transform: capitalize;
+}
+
+.customer-slots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 14px;
+}
+
+.customer-slot {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid #373740;
+  border-radius: 11px;
+  background: #24242a;
+  color: #ececf0;
+  padding: 10px 12px;
+  cursor: pointer;
+}
+
+.customer-slot.active {
+  color: #50dfa5;
+  border-color: #42c990;
+  background: rgba(66, 201, 144, .13);
+}
+
+.customer-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.customer-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  color: #b9b9c1;
+  font-size: 13px;
+}
+
+.customer-form input {
+  width: 100%;
+  border: 1px solid #36363f;
+  border-radius: 12px;
+  background: #202026;
+  color: #f4f4f6;
+  padding: 12px 13px;
+}
+
+.booking-summary {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 14px;
+  margin-top: 14px;
+  border-radius: 13px;
+  background: rgba(52, 211, 153, .09);
+  border: 1px solid rgba(52, 211, 153, .30);
+}
+
+.customer-status {
+  margin-top: 14px;
+  color: #dddde2;
+}
+
+.customer-confirm {
+  margin-top: 16px;
+  width: 100%;
+}
+
+.empty-state {
+  padding: 25px;
+  text-align: center;
+  color: #9d9da7;
+  border: 1px dashed #3a3a42;
+  border-radius: 14px;
+}
+
+@media (max-width: 700px) {
+  .service-grid,
+  .customer-form {
+    grid-template-columns: 1fr;
+  }
+
+  .booking-card {
+    padding: 17px;
+  }
+}
