@@ -5,6 +5,7 @@ import {
   Eraser, Save, Sparkles, Wand2, XCircle
 } from 'lucide-react';
 import './styles.css';
+import CustomerBooking from './CustomerBooking.jsx';
 
 const BUSINESS_NAME = import.meta.env.VITE_BUSINESS_NAME || 'DCONE BARBER';
 const WEBHOOK_URL = import.meta.env.VITE_N8N_WEBHOOK_URL || '';
@@ -293,4 +294,10 @@ const component =
     ? <CustomerBooking />
     : <App />;
 
-createRoot(document.getElementById('root')).render(component);
+const path = window.location.pathname;
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  path.startsWith('/reservar')
+    ? <CustomerBooking />
+    : <App />
+);
