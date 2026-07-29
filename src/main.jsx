@@ -1,6 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import CustomerBooking from './CustomerBooking.jsx';
+import CustomerBooking from './src/CustomerBooking.jsx';
 import './styles.css';
 
 const BUSINESS_NAME = import.meta.env.VITE_BUSINESS_NAME || 'DCONE BARBER';
