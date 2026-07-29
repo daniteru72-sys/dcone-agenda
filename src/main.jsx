@@ -1,11 +1,7 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React from 'react';
 import { createRoot } from 'react-dom/client';
-import {
-  CalendarDays, Check, ChevronLeft, ChevronRight, Clock3,
-  Eraser, Save, Sparkles, Wand2, XCircle
-} from 'lucide-react';
-import './styles.css';
 import CustomerBooking from './CustomerBooking.jsx';
+import './styles.css';
 
 const BUSINESS_NAME = import.meta.env.VITE_BUSINESS_NAME || 'DCONE BARBER';
 const WEBHOOK_URL = import.meta.env.VITE_N8N_WEBHOOK_URL || '';
