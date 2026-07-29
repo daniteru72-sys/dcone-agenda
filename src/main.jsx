@@ -285,7 +285,6 @@ function App() {
   );
 }
 
-import CustomerBooking from './CustomerBooking.jsx';
 
 const path = window.location.pathname;
 
@@ -294,7 +293,6 @@ const component =
     ? <CustomerBooking />
     : <App />;
 
-const path = window.location.pathname;
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   path.startsWith('/reservar')
