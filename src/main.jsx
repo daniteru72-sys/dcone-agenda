@@ -284,10 +284,11 @@ function App() {
 
 const path = window.location.pathname;
 
-const component =
+createRoot(document.getElementById('root')).render(
   path.startsWith('/reservar')
     ? <CustomerBooking />
-    : <App />;
+    : <App />
+);
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
