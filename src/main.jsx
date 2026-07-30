@@ -9,6 +9,7 @@ import {
   Eraser,
   Save,
   Scissors,
+  Sparkles,
   User,
   Wand2,
   XCircle
