@@ -1,5 +1,16 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
+import {
+  CalendarDays,
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  Clock3,
+  Save,
+  Scissors,
+  User,
+  XCircle
+} from 'lucide-react';
 import CustomerBooking from './src/CustomerBooking.jsx';
 import './styles.css';
 
