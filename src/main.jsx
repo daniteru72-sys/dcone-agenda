@@ -6,6 +6,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Clock3,
+  Eraser,
   Save,
   Scissors,
   User,
