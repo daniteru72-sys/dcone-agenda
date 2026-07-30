@@ -9,6 +9,7 @@ import {
   Save,
   Scissors,
   User,
+  Wand2,
   XCircle
 } from 'lucide-react';
 import CustomerBooking from './src/CustomerBooking.jsx';
