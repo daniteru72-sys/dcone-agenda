@@ -237,6 +237,8 @@ function App() {
         </article>
       </section>
 
+      <OwnerReservations />
+      
       <section className="schedule card">
         <div className="table-wrap">
           <table>
