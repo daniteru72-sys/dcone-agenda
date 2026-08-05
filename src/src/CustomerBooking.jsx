@@ -173,7 +173,7 @@ const [errorSugerencia, setErrorSugerencia] = useState('');
     return;
   }
 
-  if (!servicio) {
+  if (!service) {
     setErrorSugerencia(
       'Selecciona primero el servicio que necesitas.'
     );
@@ -193,7 +193,7 @@ const [errorSugerencia, setErrorSugerencia] = useState('');
         business_id: 'dcone-barber',
         nombre: nombre.trim(),
         telefono: telefono?.trim() || '',
-        servicio,
+        servicio: service,
         fecha_sugerida: sugerencia.fecha_sugerida,
         hora_sugerida: sugerencia.hora_sugerida,
         observaciones: sugerencia.observaciones.trim()
