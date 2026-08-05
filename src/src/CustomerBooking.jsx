@@ -17,6 +17,10 @@ const BOOKING_URL =
   import.meta.env.VITE_BOOKING_URL ||
   'https://n8n.min8n.tech/webhook/crear-reserva';
 
+const SUGGESTION_URL =
+  import.meta.env.VITE_SUGGESTION_URL ||
+  'https://n8n.min8n.tech/webhook/sugerir-cita';
+
 function formatDate(fecha) {
   return new Intl.DateTimeFormat('es-ES', {
     weekday: 'long',
@@ -146,6 +150,93 @@ const [errorSugerencia, setErrorSugerencia] = useState('');
     }
   }
 
+  async function enviarSugerencia(event) {
+  event.preventDefault();
+
+  setErrorSugerencia('');
+  setMensajeSugerencia('');
+
+  if (!sugerencia.fecha_sugerida) {
+    setErrorSugerencia('Selecciona un día preferido.');
+    return;
+  }
+
+  if (!sugerencia.hora_sugerida) {
+    setErrorSugerencia('Selecciona una hora aproximada.');
+    return;
+  }
+
+  if (!nombre?.trim()) {
+    setErrorSugerencia(
+      'Escribe tu nombre en el formulario principal antes de enviar la propuesta.'
+    );
+    return;
+  }
+
+  if (!servicio) {
+    setErrorSugerencia(
+      'Selecciona primero el servicio que necesitas.'
+    );
+    return;
+  }
+
+  setEnviandoSugerencia(true);
+
+  try {
+    const response = await fetch(SUGGESTION_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      },
+      body: JSON.stringify({
+        business_id: 'dcone-barber',
+        nombre: nombre.trim(),
+        telefono: telefono?.trim() || '',
+        servicio,
+        fecha_sugerida: sugerencia.fecha_sugerida,
+        hora_sugerida: sugerencia.hora_sugerida,
+        observaciones: sugerencia.observaciones.trim()
+      })
+    });
+
+    let resultado = {};
+
+    try {
+      resultado = await response.json();
+    } catch {
+      resultado = {};
+    }
+
+    if (!response.ok || resultado.ok === false) {
+      throw new Error(
+        resultado.mensaje ||
+        'No se pudo enviar la propuesta.'
+      );
+    }
+
+    setMensajeSugerencia(
+      resultado.mensaje ||
+      'Tu propuesta se ha enviado al establecimiento.'
+    );
+
+    setSugerencia({
+      fecha_sugerida: '',
+      hora_sugerida: '',
+      observaciones: ''
+    });
+  } catch (error) {
+    console.error(error);
+
+    setErrorSugerencia(
+      error.message ||
+      'Ha ocurrido un problema al enviar la propuesta.'
+    );
+  } finally {
+    setEnviandoSugerencia(false);
+  }
+}
+  
   if (loading) {
     return (
       <main className="customer-page">
@@ -249,6 +340,23 @@ const [errorSugerencia, setErrorSugerencia] = useState('');
             )}
           </div>
         )}
+
+        <div className="customer-suggestion">
+  <p>¿Ninguna hora te viene bien?</p>
+
+  <button
+    type="button"
+    className="secondary-button"
+    onClick={() => {
+      setMensajeSugerencia('');
+      setErrorSugerencia('');
+      setMostrarSugerencia(true);
+    }}
+  >
+    Sugerir otra fecha y hora
+  </button>
+</div>
+        
       </section>
 
       <section className="booking-card">
@@ -298,6 +406,153 @@ const [errorSugerencia, setErrorSugerencia] = useState('');
           {sending ? 'Confirmando…' : 'Confirmar cita'}
         </button>
       </section>
+
+      {mostrarSugerencia && (
+  <div
+    className="suggestion-modal-backdrop"
+    role="presentation"
+    onMouseDown={(event) => {
+      if (event.target === event.currentTarget) {
+        setMostrarSugerencia(false);
+      }
+    }}
+  >
+    <section
+      className="suggestion-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="suggestion-modal-title"
+    >
+      <div className="suggestion-modal-header">
+        <div>
+          <p className="eyebrow">PROPUESTA DE CITA</p>
+
+          <h2 id="suggestion-modal-title">
+            Sugiere otro horario
+          </h2>
+
+          <p>
+            Indica cuándo te vendría mejor. El establecimiento
+            revisará tu propuesta antes de confirmarla.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          className="suggestion-close"
+          aria-label="Cerrar"
+          onClick={() => setMostrarSugerencia(false)}
+        >
+          ×
+        </button>
+      </div>
+
+      <form
+        className="suggestion-form"
+        onSubmit={enviarSugerencia}
+      >
+        <label>
+          <span>Día preferido</span>
+
+          <div className="suggestion-native-input">
+            <input
+              type="date"
+              value={sugerencia.fecha_sugerida}
+              min={new Date().toISOString().slice(0, 10)}
+              onChange={(event) => {
+                setSugerencia((actual) => ({
+                  ...actual,
+                  fecha_sugerida: event.target.value
+                }));
+              }}
+              required
+            />
+          </div>
+        </label>
+
+        <label>
+          <span>Hora aproximada</span>
+
+          <div className="suggestion-native-input">
+            <input
+              type="time"
+              value={sugerencia.hora_sugerida}
+              onChange={(event) => {
+                setSugerencia((actual) => ({
+                  ...actual,
+                  hora_sugerida: event.target.value
+                }));
+              }}
+              required
+            />
+          </div>
+        </label>
+
+        <label className="suggestion-full-field">
+          <span>Comentario opcional</span>
+
+          <textarea
+            rows="4"
+            maxLength="500"
+            placeholder="Por ejemplo: también podría media hora más tarde."
+            value={sugerencia.observaciones}
+            onChange={(event) => {
+              setSugerencia((actual) => ({
+                ...actual,
+                observaciones: event.target.value
+              }));
+            }}
+          />
+
+          <small>
+            {sugerencia.observaciones.length}/500
+          </small>
+        </label>
+
+        {errorSugerencia && (
+          <div
+            className="suggestion-feedback suggestion-error"
+            role="alert"
+          >
+            {errorSugerencia}
+          </div>
+        )}
+
+        {mensajeSugerencia && (
+          <div
+            className="suggestion-feedback suggestion-success"
+            role="status"
+          >
+            ✅ {mensajeSugerencia}
+          </div>
+        )}
+
+        <div className="suggestion-actions">
+          <button
+            type="button"
+            className="secondary-button"
+            onClick={() => setMostrarSugerencia(false)}
+          >
+            {mensajeSugerencia ? 'Cerrar' : 'Cancelar'}
+          </button>
+
+          {!mensajeSugerencia && (
+            <button
+              type="submit"
+              className="primary-button"
+              disabled={enviandoSugerencia}
+            >
+              {enviandoSugerencia
+                ? 'Enviando…'
+                : 'Enviar propuesta'}
+            </button>
+          )}
+        </div>
+      </form>
+    </section>
+  </div>
+)}
+      
     </main>
   );
 }
