@@ -15,6 +15,7 @@ import {
   XCircle
 } from 'lucide-react';
 import CustomerBooking from './src/CustomerBooking.jsx';
+import OwnerReservations from './src/OwnerReservations.jsx';
 import './styles.css';
 
 const BUSINESS_NAME = import.meta.env.VITE_BUSINESS_NAME || 'DCONE BARBER';
