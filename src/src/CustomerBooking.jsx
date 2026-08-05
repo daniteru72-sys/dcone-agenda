@@ -34,6 +34,17 @@ export default function CustomerBooking() {
   const [telefono, setTelefono] = useState('');
   const [status, setStatus] = useState('');
   const [sending, setSending] = useState(false);
+  const [mostrarSugerencia, setMostrarSugerencia] = useState(false);
+
+const [sugerencia, setSugerencia] = useState({
+  fecha_sugerida: '',
+  hora_sugerida: '',
+  observaciones: ''
+});
+
+const [enviandoSugerencia, setEnviandoSugerencia] = useState(false);
+const [mensajeSugerencia, setMensajeSugerencia] = useState('');
+const [errorSugerencia, setErrorSugerencia] = useState('');
 
   useEffect(() => {
     cargarHuecos();
