@@ -186,9 +186,9 @@ const [errorSugerencia, setErrorSugerencia] = useState('');
     const response = await fetch(SUGGESTION_URL, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json'
-      },
+  'Content-Type': 'text/plain;charset=UTF-8',
+  Accept: 'application/json'
+},
       body: JSON.stringify({
         business_id: 'dcone-barber',
         nombre: nombre.trim(),
