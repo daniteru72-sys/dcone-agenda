@@ -9,6 +9,8 @@ import {
   User
 } from 'lucide-react';
 
+import OneSignal from 'react-onesignal';
+
 const AVAILABILITY_URL =
   import.meta.env.VITE_AVAILABILITY_URL ||
   'https://n8n.min8n.tech/webhook/huecos-disponibles';
@@ -20,6 +22,9 @@ const BOOKING_URL =
 const SUGGESTION_URL =
   import.meta.env.VITE_SUGGESTION_URL ||
   'https://n8n.min8n.tech/webhook/sugerir-cita';
+
+const [pushDisponible, setPushDisponible] = useState(false);
+const [pushActivo, setPushActivo] = useState(false);
 
 function formatDate(fecha) {
   return new Intl.DateTimeFormat('es-ES', {
@@ -53,7 +58,43 @@ const [errorSugerencia, setErrorSugerencia] = useState('');
   useEffect(() => {
     cargarHuecos();
   }, []);
+useEffect(() => {
+  let activo = true;
 
+  async function iniciarPush() {
+    try {
+      await OneSignal.init({
+        appId: import.meta.env.VITE_ONESIGNAL_APP_ID,
+        serviceWorkerPath: '/OneSignalSDKWorker.js',
+        serviceWorkerParam: {
+          scope: '/'
+        },
+        notifyButton: {
+          enable: false
+        },
+        allowLocalhostAsSecureOrigin: false
+      });
+
+      if (!activo) return;
+
+      setPushDisponible(true);
+
+      const aceptado =
+        OneSignal.Notifications.permission === true;
+
+      setPushActivo(aceptado);
+    } catch (error) {
+      console.error('Error iniciando OneSignal:', error);
+    }
+  }
+
+  iniciarPush();
+
+  return () => {
+    activo = false;
+  };
+}, []);
+  
   async function cargarHuecos() {
     setLoading(true);
     setStatus('');
@@ -134,6 +175,10 @@ const [errorSugerencia, setErrorSugerencia] = useState('');
         `✅ Cita confirmada el ${formatDate(slot.fecha)} a las ${slot.hora}.`
       );
 
+      const [reservaConfirmada, setReservaConfirmada] = useState(false);
+      setReservaConfirmada(true);
+
+  
       await cargarHuecos();
       setSlot(null);
     } catch (error) {
@@ -407,6 +452,17 @@ const [errorSugerencia, setErrorSugerencia] = useState('');
         </button>
       </section>
 
+      {reservaConfirmada && (
+  <button
+    className="primary-button"
+    onClick={async () => {
+      await OneSignal.Notifications.requestPermission();
+    }}
+  >
+    🔔 Activar notificaciones
+  </button>
+)}
+      
       {mostrarSugerencia && (
   <div
     className="suggestion-modal-backdrop"
