@@ -100,10 +100,57 @@ useEffect(() => {
   };
 }, []);
 
-  async function registrarPushCliente() {
-  if (!pushActivo) {
-    await OneSignal.Notifications.requestPermission();
+async function registrarPushCliente() {
+  try {
+    console.log("1. Botón pulsado");
+
+    console.log(
+      "2. Permiso actual:",
+      OneSignal.Notifications.permission
+    );
+
+    if (!pushActivo) {
+      await OneSignal.Notifications.requestPermission();
+    }
+
+    console.log(
+      "3. Permiso después:",
+      OneSignal.Notifications.permission
+    );
+
+    const id = OneSignal.User.PushSubscription.id;
+
+    console.log("4. OneSignal ID:", id);
+
+    if (!id) {
+      throw new Error("No se ha obtenido el ID de OneSignal.");
+    }
+
+    const response = await fetch(PUSH_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        business_id: "dcone-barber",
+        telefono: telefono.trim(),
+        push_id: id
+      })
+    });
+
+    console.log("5. Respuesta:", response.status);
+
+    const resultado = await response.json();
+
+    console.log("6. Resultado:", resultado);
+
+    setPushActivo(true);
+    setStatus("✅ Avisos activados.");
+  } catch (error) {
+    console.error("ERROR:", error);
+    setStatus(error.message);
   }
+}
 
   const id = await OneSignal.User.PushSubscription.id;
 
