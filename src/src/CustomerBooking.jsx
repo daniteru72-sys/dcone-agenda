@@ -146,6 +146,7 @@ async function registrarPushCliente() {
 
     setPushActivo(true);
     setStatus("✅ Avisos activados.");
+
   } catch (error) {
     console.error("ERROR:", error);
     setStatus(error.message);
