@@ -68,6 +68,10 @@ useEffect(() => {
 
   async function iniciarPush() {
     try {
+      console.log(
+  'APP ID OneSignal:',
+  import.meta.env.VITE_ONESIGNAL_APP_ID
+);
       await OneSignal.init({
         appId: import.meta.env.VITE_ONESIGNAL_APP_ID,
         serviceWorkerPath: '/OneSignalSDKWorker.js',
