@@ -154,9 +154,6 @@ async function registrarPushCliente() {
 }
 
 
-  setStatus('✅ Avisos activados.');
-}
-  
   async function cargarHuecos() {
     setLoading(true);
     setStatus('');
