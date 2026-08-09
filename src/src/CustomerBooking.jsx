@@ -465,7 +465,17 @@ useEffect(() => {
 
         {status && <div className="customer-status">{status}</div>}
 
-        <button
+        {pushDisponible && !pushActivo && (
+  <button
+    type="button"
+    className="secondary-button"
+    onClick={registrarPushCliente}
+  >
+    🔔 Activar avisos
+  </button>
+)}
+
+       <button
           className="primary-button customer-confirm"
           onClick={confirmarReserva}
           disabled={sending}
