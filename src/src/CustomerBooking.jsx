@@ -94,6 +94,28 @@ useEffect(() => {
     activo = false;
   };
 }, []);
+
+  async function registrarPushCliente() {
+  if (!pushActivo) {
+    await OneSignal.Notifications.requestPermission();
+  }
+
+  const id = await OneSignal.User.PushSubscription.id;
+
+  await fetch(PUSH_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      business_id: 'dcone-barber',
+      telefono: telefono.trim(),
+      push_id: id
+    })
+  });
+
+  setStatus('✅ Avisos activados.');
+}
   
   async function cargarHuecos() {
     setLoading(true);
