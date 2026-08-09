@@ -23,8 +23,10 @@ const SUGGESTION_URL =
   import.meta.env.VITE_SUGGESTION_URL ||
   'https://n8n.min8n.tech/webhook/sugerir-cita';
 
-const [pushDisponible, setPushDisponible] = useState(false);
-const [pushActivo, setPushActivo] = useState(false);
+const PUSH_URL =
+  import.meta.env.VITE_PUSH_URL ||
+  'https://n8n.min8n.tech/webhook/guardar-push';
+
 
 function formatDate(fecha) {
   return new Intl.DateTimeFormat('es-ES', {
@@ -44,6 +46,8 @@ export default function CustomerBooking() {
   const [status, setStatus] = useState('');
   const [sending, setSending] = useState(false);
   const [mostrarSugerencia, setMostrarSugerencia] = useState(false);
+  const [pushDisponible, setPushDisponible] = useState(false);
+  const [pushActivo, setPushActivo] = useState(false);
 
 const [sugerencia, setSugerencia] = useState({
   fecha_sugerida: '',
