@@ -675,3 +675,17 @@ thead .time-column { z-index: 7; }
     width: 100%;
   }
 }
+.secondary-button {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 14px;
+  border-radius: 10px;
+  background: #2d2d2d;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.secondary-button:hover {
+  background: #3b3b3b;
+}
