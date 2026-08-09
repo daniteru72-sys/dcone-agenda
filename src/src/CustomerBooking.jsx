@@ -48,6 +48,7 @@ export default function CustomerBooking() {
   const [mostrarSugerencia, setMostrarSugerencia] = useState(false);
   const [pushDisponible, setPushDisponible] = useState(false);
   const [pushActivo, setPushActivo] = useState(false);
+  const [reservaConfirmada, setReservaConfirmada] = useState(false);
 
 const [sugerencia, setSugerencia] = useState({
   fecha_sugerida: '',
@@ -201,8 +202,7 @@ useEffect(() => {
         `✅ Cita confirmada el ${formatDate(slot.fecha)} a las ${slot.hora}.`
       );
 
-      const [reservaConfirmada, setReservaConfirmada] = useState(false);
-      setReservaConfirmada(true);
+     setReservaConfirmada(true);
 
   
       await cargarHuecos();
