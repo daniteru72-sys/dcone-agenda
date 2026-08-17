@@ -361,7 +361,7 @@ async function registrarPushCliente() {
 
         <div>
           <p className="eyebrow">RESERVA ONLINE</p>
-          <h1>{availability?.negocio || 'DCONE BARBER'}</h1>
+          <h1>{availability?.negocio || 'HUECOS'}</h1>
           <p className="subtitle">
             Elige el servicio, la fecha y la hora que prefieras.
           </p>
