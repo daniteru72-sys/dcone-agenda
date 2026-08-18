@@ -122,13 +122,34 @@ async function registrarPushCliente() {
       OneSignal.Notifications.permission
     );
 
-    const id = OneSignal.User.PushSubscription.id;
+    let id = OneSignal.User.PushSubscription.id;
 
-    console.log("4. OneSignal ID:", id);
+// Si todavía no existe el ID, esperamos a que OneSignal
+// termine de crear la suscripción.
+if (!id) {
+  await OneSignal.User.PushSubscription.optIn();
 
-    if (!id) {
-      throw new Error("No se ha obtenido el ID de OneSignal.");
-    }
+  for (let intento = 0; intento < 10; intento++) {
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    id = OneSignal.User.PushSubscription.id;
+
+    console.log(
+      `Esperando OneSignal ID - intento ${intento + 1}:`,
+      id
+    );
+
+    if (id) break;
+  }
+}
+
+console.log("4. OneSignal ID:", id);
+
+if (!id) {
+  throw new Error(
+    "No se pudo activar este dispositivo para recibir avisos."
+  );
+}
 
     const response = await fetch(PUSH_URL, {
       method: "POST",
