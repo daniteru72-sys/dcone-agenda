@@ -106,75 +106,122 @@ useEffect(() => {
 
 async function registrarPushCliente() {
   try {
-    console.log("1. Botón pulsado");
+    setStatus('Activando avisos...');
 
-    console.log(
-      "2. Permiso actual:",
-      OneSignal.Notifications.permission
-    );
+    const supported =
+      OneSignal.Notifications.isPushSupported();
 
-    if (!pushActivo) {
+    if (!supported) {
+      throw new Error(
+        'Este navegador no admite notificaciones push.'
+      );
+    }
+
+    // Si el navegador todavía no tiene permiso, lo pedimos
+    if (!OneSignal.Notifications.permission) {
       await OneSignal.Notifications.requestPermission();
     }
 
-    console.log(
-      "3. Permiso después:",
-      OneSignal.Notifications.permission
-    );
+    if (!OneSignal.Notifications.permission) {
+      throw new Error(
+        'Debes permitir las notificaciones en el navegador.'
+      );
+    }
 
+    // Intentamos suscribir el navegador
+    await OneSignal.User.PushSubscription.optIn();
+
+    // Si ya existe el ID, lo usamos inmediatamente
     let id = OneSignal.User.PushSubscription.id;
 
-// Si todavía no existe el ID, esperamos a que OneSignal
-// termine de crear la suscripción.
-if (!id) {
-  await OneSignal.User.PushSubscription.optIn();
+    if (!id) {
+      id = await new Promise((resolve, reject) => {
+        const timeout = setTimeout(() => {
+          OneSignal.User.PushSubscription.removeEventListener(
+            'change',
+            subscriptionListener
+          );
 
-  for (let intento = 0; intento < 10; intento++) {
-    await new Promise(resolve => setTimeout(resolve, 500));
+          reject(
+            new Error(
+              'OneSignal no pudo crear la suscripción del dispositivo.'
+            )
+          );
+        }, 15000);
 
-    id = OneSignal.User.PushSubscription.id;
+        function subscriptionListener(event) {
+          console.log(
+            'Cambio OneSignal:',
+            event.current
+          );
 
-    console.log(
-      `Esperando OneSignal ID - intento ${intento + 1}:`,
-      id
-    );
+          if (event.current?.id) {
+            clearTimeout(timeout);
 
-    if (id) break;
-  }
-}
+            OneSignal.User.PushSubscription.removeEventListener(
+              'change',
+              subscriptionListener
+            );
 
-console.log("4. OneSignal ID:", id);
+            resolve(event.current.id);
+          }
+        }
 
-if (!id) {
-  throw new Error(
-    "No se pudo activar este dispositivo para recibir avisos."
-  );
-}
+        OneSignal.User.PushSubscription.addEventListener(
+          'change',
+          subscriptionListener
+        );
+      });
+    }
+
+    console.log('Subscription ID:', id);
 
     const response = await fetch(PUSH_URL, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json"
+        'Content-Type': 'text/plain;charset=UTF-8',
+        Accept: 'application/json'
       },
       body: JSON.stringify({
-        business_id: "dcone-barber",
-        telefono: telefono.trim(),
-        push_id: id
+        business_id: 'dcone-barber',
+        nombre: nombre.trim(),
+        telefono: telefono?.trim() || '',
+        onesignal_id: id,
+        reserva_id:
+          localStorage.getItem('dcone_reserva_id') || '',
+        solicitud_id:
+          localStorage.getItem('dcone_solicitud_id') || ''
       })
     });
 
-    console.log("5. Respuesta:", response.status);
+    const texto = await response.text();
 
-    const resultado = await response.json();
+    let resultado = {};
 
-    console.log("6. Resultado:", resultado);
+    if (texto) {
+      try {
+        resultado = JSON.parse(texto);
+      } catch {
+        resultado = {};
+      }
+    }
+
+    if (!response.ok) {
+      throw new Error(
+        resultado.mensaje ||
+        `Error HTTP ${response.status}`
+      );
+    }
 
     setPushActivo(true);
-    setStatus("✅ Avisos activados.");
+    setStatus('✅ Avisos activados correctamente.');
 
   } catch (error) {
-    console.error("ERROR:", error);
-    setStatus(error.message);
+    console.error('Error activando avisos:', error);
+
+    setStatus(
+      `❌ ${error.message}`
+    );
   }
 }
 
@@ -378,11 +425,11 @@ if (!id) {
   return (
     <main className="customer-page">
       <section className="customer-hero">
-        <div className="brand-mark">DB</div>
+        <div className="brand-mark">H</div>
 
         <div>
           <p className="eyebrow">RESERVA ONLINE</p>
-          <h1>{availability?.negocio || 'HUECOS'}</h1>
+          <h1>HUECOS</h1>
           <p className="subtitle">
             Elige el servicio, la fecha y la hora que prefieras.
           </p>
